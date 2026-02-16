@@ -105,6 +105,7 @@ function DashboardIndexPage() {
             {recentTickets.tickets.slice(0, 5).map((ticket) => (
               <div
                 key={ticket.id}
+                onClick={() => navigate({ to: '/dashboard/tickets/$ticketId', params: { ticketId: ticket.id } })}
                 className="bg-white border border-gray-200 rounded-lg p-4 hover:border-indigo-300 hover:shadow-md transition-all cursor-pointer"
               >
                 <div className="flex items-start justify-between">

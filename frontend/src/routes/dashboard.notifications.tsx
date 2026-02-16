@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import {
   useNotifications,
   useMarkAllNotificationsAsRead,
@@ -12,6 +12,7 @@ export const Route = createFileRoute('/dashboard/notifications')({
 });
 
 function NotificationsPage() {
+  const navigate = useNavigate();
   const { data: notifications, isLoading } = useNotifications();
   const { mutateAsync: markAllAsRead, isPending: markingAll } =
     useMarkAllNotificationsAsRead();
@@ -34,6 +35,19 @@ function NotificationsPage() {
       await markAsRead(notificationId);
     } catch {
       // silent fail
+    }
+  };
+
+  const handleNotificationClick = async (notification: typeof notificationsList[0]) => {
+    // Mark as read
+    await handleMarkAsRead(notification.id, notification.isRead);
+    
+    // Navigate to related ticket if exists
+    if (notification.relatedTicketId) {
+      navigate({
+        to: '/dashboard/tickets/$ticketId',
+        params: { ticketId: notification.relatedTicketId },
+      });
     }
   };
 
@@ -71,9 +85,7 @@ function NotificationsPage() {
           {notificationsList.map((notification) => (
             <div
               key={notification.id}
-              onClick={() =>
-                handleMarkAsRead(notification.id, notification.isRead)
-              }
+              onClick={() => handleNotificationClick(notification)}
               className={`bg-white border rounded-lg p-4 hover:border-indigo-300 transition-all cursor-pointer ${
                 !notification.isRead
                   ? 'border-indigo-200 bg-indigo-50'

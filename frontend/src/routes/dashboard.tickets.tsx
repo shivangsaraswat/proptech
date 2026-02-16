@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useTickets } from '@/hooks/queries/use-tickets';
 import { Button } from '@/components/ui/button';
 import { CreateTicketDialog } from '@/components/tickets/create-ticket-dialog';
@@ -12,6 +12,7 @@ export const Route = createFileRoute('/dashboard/tickets')({
 });
 
 function TicketsPage() {
+  const navigate = useNavigate();
   const { user } = useAuthStore();
   const [statusFilter, setStatusFilter] = useState<TicketStatus | ''>('');
   const [createOpen, setCreateOpen] = useState(false);
@@ -97,7 +98,8 @@ function TicketsPage() {
             {tickets.map((ticket) => (
               <div
                 key={ticket.id}
-                className="bg-white border border-gray-200 rounded-lg p-6 hover:border-indigo-300 hover:shadow-md transition-all"
+                onClick={() => navigate({ to: '/dashboard/tickets/$ticketId', params: { ticketId: ticket.id } })}
+                className="bg-white border border-gray-200 rounded-lg p-6 hover:border-indigo-300 hover:shadow-md transition-all cursor-pointer"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">

@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardTicketsRouteImport } from './routes/dashboard.tickets'
 import { Route as DashboardNotificationsRouteImport } from './routes/dashboard.notifications'
+import { Route as DashboardTicketsTicketIdRouteImport } from './routes/dashboard.tickets.$ticketId'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -52,6 +53,12 @@ const DashboardNotificationsRoute = DashboardNotificationsRouteImport.update({
   path: '/notifications',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardTicketsTicketIdRoute =
+  DashboardTicketsTicketIdRouteImport.update({
+    id: '/$ticketId',
+    path: '/$ticketId',
+    getParentRoute: () => DashboardTicketsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -59,16 +66,18 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/dashboard/notifications': typeof DashboardNotificationsRoute
-  '/dashboard/tickets': typeof DashboardTicketsRoute
+  '/dashboard/tickets': typeof DashboardTicketsRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/tickets/$ticketId': typeof DashboardTicketsTicketIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/dashboard/notifications': typeof DashboardNotificationsRoute
-  '/dashboard/tickets': typeof DashboardTicketsRoute
+  '/dashboard/tickets': typeof DashboardTicketsRouteWithChildren
   '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/tickets/$ticketId': typeof DashboardTicketsTicketIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,8 +86,9 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/dashboard/notifications': typeof DashboardNotificationsRoute
-  '/dashboard/tickets': typeof DashboardTicketsRoute
+  '/dashboard/tickets': typeof DashboardTicketsRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/tickets/$ticketId': typeof DashboardTicketsTicketIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -90,6 +100,7 @@ export interface FileRouteTypes {
     | '/dashboard/notifications'
     | '/dashboard/tickets'
     | '/dashboard/'
+    | '/dashboard/tickets/$ticketId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -98,6 +109,7 @@ export interface FileRouteTypes {
     | '/dashboard/notifications'
     | '/dashboard/tickets'
     | '/dashboard'
+    | '/dashboard/tickets/$ticketId'
   id:
     | '__root__'
     | '/'
@@ -107,6 +119,7 @@ export interface FileRouteTypes {
     | '/dashboard/notifications'
     | '/dashboard/tickets'
     | '/dashboard/'
+    | '/dashboard/tickets/$ticketId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -167,18 +180,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardNotificationsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/tickets/$ticketId': {
+      id: '/dashboard/tickets/$ticketId'
+      path: '/$ticketId'
+      fullPath: '/dashboard/tickets/$ticketId'
+      preLoaderRoute: typeof DashboardTicketsTicketIdRouteImport
+      parentRoute: typeof DashboardTicketsRoute
+    }
   }
 }
 
+interface DashboardTicketsRouteChildren {
+  DashboardTicketsTicketIdRoute: typeof DashboardTicketsTicketIdRoute
+}
+
+const DashboardTicketsRouteChildren: DashboardTicketsRouteChildren = {
+  DashboardTicketsTicketIdRoute: DashboardTicketsTicketIdRoute,
+}
+
+const DashboardTicketsRouteWithChildren =
+  DashboardTicketsRoute._addFileChildren(DashboardTicketsRouteChildren)
+
 interface DashboardRouteChildren {
   DashboardNotificationsRoute: typeof DashboardNotificationsRoute
-  DashboardTicketsRoute: typeof DashboardTicketsRoute
+  DashboardTicketsRoute: typeof DashboardTicketsRouteWithChildren
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardNotificationsRoute: DashboardNotificationsRoute,
-  DashboardTicketsRoute: DashboardTicketsRoute,
+  DashboardTicketsRoute: DashboardTicketsRouteWithChildren,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 
