@@ -332,13 +332,15 @@ export const ticketService = {
         throw ApiError.forbidden("You can only update tickets assigned to you");
       }
 
+      // Technicians can only change status
+      const updateData = userRole === "technician"
+        ? { status: input.status, updatedAt: new Date() }
+        : { ...input, updatedAt: new Date() };
+
       // Update ticket
       const [updatedTicket] = await tx
         .update(tickets)
-        .set({
-          ...input,
-          updatedAt: new Date(),
-        })
+        .set(updateData)
         .where(eq(tickets.id, ticketId))
         .returning();
 
@@ -563,7 +565,7 @@ export const ticketService = {
       const [updatedTicket] = await tx
         .update(tickets)
         .set({
-          status: newStatus,
+          status: newStatus as "open" | "assigned" | "in_progress" | "done",
           updatedAt: new Date(),
         })
         .where(eq(tickets.id, ticketId))

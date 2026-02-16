@@ -11,15 +11,13 @@ export const notificationService = {
     type: string;
     relatedTicketId?: string;
   }): Promise<void> {
-    return withTransaction(async (tx) => {
-      await tx.insert(notifications).values({
-        userId: data.userId,
-        title: data.title,
-        message: data.message,
-        type: data.type,
-        relatedTicketId: data.relatedTicketId,
-        isRead: false,
-      });
+    await db.insert(notifications).values({
+      userId: data.userId,
+      title: data.title,
+      message: data.message,
+      type: data.type,
+      relatedTicketId: data.relatedTicketId,
+      isRead: false,
     });
   },
 

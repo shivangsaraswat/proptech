@@ -17,8 +17,8 @@ export const queryClient = new QueryClient({
       refetchOnWindowFocus: true,
       // Refetch on reconnect
       refetchOnReconnect: true,
-      // Don't refetch on mount if data is fresh
-      refetchOnMount: false,
+      // Refetch on mount if data is stale
+      refetchOnMount: true,
     },
     mutations: {
       // Retry failed mutations once

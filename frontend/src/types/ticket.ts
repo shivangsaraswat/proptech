@@ -82,7 +82,7 @@ export interface UpdateTicketInput {
 }
 
 export interface AddCommentInput {
-  comment: string;
+  content: string;
 }
 
 export interface AddImagesInput {
