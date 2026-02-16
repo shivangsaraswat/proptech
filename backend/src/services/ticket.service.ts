@@ -263,7 +263,7 @@ export const ticketService = {
       "Creating new ticket"
     );
 
-    return withTransaction(async (tx) => {
+    const result = await withTransaction(async (tx) => {
       // Create ticket
       const [newTicket] = await tx
         .insert(tickets)
@@ -303,21 +303,23 @@ export const ticketService = {
         { ticketId: newTicket.id, userId, imageCount: input.imageUrls?.length || 0 }
       );
 
-      // Notify all managers about the new ticket (outside transaction for resilience)
-      const [creator] = await db
-        .select({ name: users.name })
-        .from(users)
-        .where(eq(users.id, userId));
-
-      await notificationService.notifyNewTicketToManagers(
-        newTicket.id,
-        newTicket.title,
-        creator?.name || "A tenant",
-        newTicket.priority
-      );
-
       return newTicket;
     });
+
+    // Notify all managers about the new ticket (outside transaction so FK is committed)
+    const [creator] = await db
+      .select({ name: users.name })
+      .from(users)
+      .where(eq(users.id, userId));
+
+    await notificationService.notifyNewTicketToManagers(
+      result.id,
+      result.title,
+      creator?.name || "A tenant",
+      result.priority
+    );
+
+    return result;
   },
 
   async updateTicket(
