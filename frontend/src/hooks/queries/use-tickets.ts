@@ -47,6 +47,7 @@ export function useTickets(filters?: {
 export function useTicket(ticketId: string) {
   return useQuery({
     queryKey: queryKeys.tickets.detail(ticketId),
+    refetchInterval: 2000,
     queryFn: async () => {
       const { data } = await apiClient.get<ApiResponse<Ticket>>(
         `/tickets/${ticketId}`
