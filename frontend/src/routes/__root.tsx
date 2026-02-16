@@ -9,6 +9,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import appCss from '../styles.css?url';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { queryClient } from '@/lib/query-client';
 
 export const Route = createRootRoute({
@@ -40,8 +41,10 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <Toaster position="top-right" richColors />
+      <TooltipProvider>
+        <Outlet />
+        <Toaster position="top-right" richColors />
+      </TooltipProvider>
     </QueryClientProvider>
   );
 }

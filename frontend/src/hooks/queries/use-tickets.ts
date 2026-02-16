@@ -33,7 +33,7 @@ export function useTickets(filters?: {
       if (filters?.limit) params.append('limit', filters.limit.toString());
 
       const { data } = await apiClient.get<ApiResponse<{
-        tickets: Ticket[];
+        tickets: Array<Ticket>;
         pagination: { page: number; limit: number; total: number; totalPages: number };
       }>>(
         `/tickets?${params.toString()}`

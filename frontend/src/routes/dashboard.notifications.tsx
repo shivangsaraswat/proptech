@@ -1,11 +1,20 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
+
+import { HugeiconsIcon } from '@hugeicons/react';
 import {
-  useNotifications,
+  CheckmarkCircle02Icon,
+  Comment01Icon,
+  Task01Icon,
+  Ticket01Icon,
+  UserIcon
+} from '@hugeicons/core-free-icons';
+import { Button } from '@/components/ui/button';
+import {
   useMarkAllNotificationsAsRead,
   useMarkNotificationAsRead,
+  useNotifications,
 } from '@/hooks/queries/use-notifications';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
 
 export const Route = createFileRoute('/dashboard/notifications')({
   component: NotificationsPage,
@@ -41,7 +50,7 @@ function NotificationsPage() {
   const handleNotificationClick = async (notification: typeof notificationsList[0]) => {
     // Mark as read
     await handleMarkAsRead(notification.id, notification.isRead);
-    
+
     // Navigate to related ticket if exists
     if (notification.relatedTicketId) {
       navigate({
@@ -51,92 +60,101 @@ function NotificationsPage() {
     }
   };
 
+  const getIcon = (type: string) => {
+    switch (type) {
+      case 'ticket_created':
+        return Task01Icon;
+      case 'ticket_assigned':
+        return UserIcon;
+      case 'ticket_status_changed':
+        return CheckmarkCircle02Icon; // Or replace with a status icon
+      case 'ticket_comment':
+        return Comment01Icon;
+      default:
+        return Ticket01Icon;
+    }
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between border-b pb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Notifications</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Notifications</h1>
+          <p className="text-muted-foreground mt-1 text-sm">
             Stay updated with all your maintenance activities
           </p>
         </div>
         <Button
           variant="outline"
+          size="sm"
           onClick={handleMarkAllAsRead}
           disabled={markingAll || !hasUnread}
+          className="h-8 text-xs"
         >
-          {markingAll ? 'Marking...' : 'Mark All as Read'}
+          {markingAll ? 'Marking...' : 'Mark all as read'}
         </Button>
       </div>
 
       {/* Notifications List */}
-      {isLoading ? (
-        <div className="space-y-4">
-          {[...Array(5)].map((_, i) => (
-            <div
-              key={i}
-              className="h-24 bg-gray-200 rounded-lg animate-pulse"
-            />
-          ))}
-        </div>
-      ) : notificationsList.length > 0 ? (
-        <div className="space-y-3">
-          {notificationsList.map((notification) => (
-            <div
-              key={notification.id}
-              onClick={() => handleNotificationClick(notification)}
-              className={`bg-white border rounded-lg p-4 hover:border-indigo-300 transition-all cursor-pointer ${
-                !notification.isRead
-                  ? 'border-indigo-200 bg-indigo-50'
-                  : 'border-gray-200'
-              }`}
-            >
-              <div className="flex items-start gap-4">
-                <div className="text-2xl">
-                  {notification.type === 'ticket_created'
-                    ? '🆕'
-                    : notification.type === 'ticket_assigned'
-                      ? '👤'
-                      : notification.type === 'ticket_status_changed'
-                        ? '🔄'
-                        : notification.type === 'ticket_comment'
-                          ? '💬'
-                          : '🔔'}
+      <div className="rounded-xl border border-border/60 bg-card shadow-sm overflow-hidden divide-y divide-border/60">
+        {isLoading ? (
+          <div className="p-8 space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-16 w-full bg-muted/20 rounded animate-pulse" />
+            ))}
+          </div>
+        ) : notificationsList.length > 0 ? (
+          <div className="divide-y divide-border/40">
+            {notificationsList.map((notification) => (
+              <div
+                key={notification.id}
+                onClick={() => handleNotificationClick(notification)}
+                className={`
+                group flex items-start gap-4 p-4 transition-all cursor-pointer hover:bg-muted/30
+                ${!notification.isRead ? 'bg-blue-50/50 hover:bg-blue-50/80' : 'bg-transparent'}
+              `}
+              >
+                <div className={`mt-1 h-8 w-8 rounded-full flex items-center justify-center shrink-0 
+                 ${!notification.isRead ? 'bg-blue-100 text-blue-600' : 'bg-muted text-muted-foreground'}
+              `}>
+                  <HugeiconsIcon icon={getIcon(notification.type)} className="h-4 w-4" />
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="font-medium text-gray-900">
-                        {notification.title}
-                      </p>
-                      <p className="text-sm text-gray-600 mt-1">
-                        {notification.message}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-2">
-                        {new Date(notification.createdAt).toLocaleString()}
-                      </p>
-                    </div>
-                    {!notification.isRead && (
-                      <div className="w-2 h-2 bg-indigo-600 rounded-full flex-shrink-0 mt-1" />
-                    )}
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className={`text-sm font-medium truncate pr-4 ${!notification.isRead ? 'text-foreground' : 'text-muted-foreground'}`}>
+                      {notification.title}
+                    </p>
+                    <span className="text-xs text-muted-foreground shrink-0 whitespace-nowrap">
+                      {new Date(notification.createdAt).toLocaleString()}
+                    </span>
                   </div>
+                  <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
+                    {notification.message}
+                  </p>
                 </div>
+
+                {!notification.isRead && (
+                  <div className="self-center">
+                    <div className="h-2 w-2 rounded-full bg-blue-500" />
+                  </div>
+                )}
               </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="h-12 w-12 rounded-full bg-muted/30 flex items-center justify-center mb-4">
+              <HugeiconsIcon icon={Ticket01Icon} className="h-6 w-6 text-muted-foreground" />
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-16 bg-white rounded-lg border border-gray-200">
-          <div className="text-6xl mb-4">🔔</div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            No notifications yet
-          </h3>
-          <p className="text-gray-600">
-            You'll see notifications about your tickets here
-          </p>
-        </div>
-      )}
+            <h3 className="text-lg font-medium text-foreground">No notifications yet</h3>
+            <p className="text-muted-foreground text-sm mt-1">
+              You'll see activity updates here.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

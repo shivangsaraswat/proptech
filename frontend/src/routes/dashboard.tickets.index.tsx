@@ -1,11 +1,11 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { useState } from 'react';
+import type { Ticket, TicketStatus } from '@/types';
 import { useTickets } from '@/hooks/queries/use-tickets';
 import { Button } from '@/components/ui/button';
 import { CreateTicketDialog } from '@/components/tickets/create-ticket-dialog';
 import { AssignTicketDialog } from '@/components/tickets/assign-ticket-dialog';
 import { useAuthStore } from '@/stores/auth-store';
-import { useState } from 'react';
-import type { Ticket, TicketStatus } from '@/types';
 
 export const Route = createFileRoute('/dashboard/tickets/')({
   component: TicketsIndexPage,

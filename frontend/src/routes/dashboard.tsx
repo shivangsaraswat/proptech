@@ -1,4 +1,4 @@
-import { Navigate, createFileRoute, Outlet } from '@tanstack/react-router';
+import { Navigate, Outlet, createFileRoute } from '@tanstack/react-router';
 import { useAuthStore } from '@/stores/auth-store';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 
