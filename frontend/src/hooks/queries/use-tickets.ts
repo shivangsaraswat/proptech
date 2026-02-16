@@ -72,6 +72,7 @@ export function useCreateTicket() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.tickets.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.stats });
+      queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all });
     },
   });
 }
@@ -118,6 +119,7 @@ export function useAssignTicket(ticketId: string) {
       );
       queryClient.invalidateQueries({ queryKey: queryKeys.tickets.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.stats });
+      queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all });
     },
   });
 }

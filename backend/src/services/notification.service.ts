@@ -128,4 +128,33 @@ export const notificationService = {
       relatedTicketId: ticketId,
     });
   },
+
+  async notifyNewTicketToManagers(
+    ticketId: string,
+    ticketTitle: string,
+    tenantName: string,
+    priority: string
+  ): Promise<void> {
+    // Find all active managers
+    const managers = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(
+        and(
+          eq(users.role, "manager"),
+          eq(users.isActive, true)
+        )
+      );
+
+    // Send notification to each manager
+    for (const manager of managers) {
+      await this.create({
+        userId: manager.id,
+        title: "New Ticket Raised",
+        message: `${tenantName} raised a ${priority} priority ticket: "${ticketTitle}"`,
+        type: "ticket_created",
+        relatedTicketId: ticketId,
+      });
+    }
+  },
 };

@@ -303,6 +303,19 @@ export const ticketService = {
         { ticketId: newTicket.id, userId, imageCount: input.imageUrls?.length || 0 }
       );
 
+      // Notify all managers about the new ticket (outside transaction for resilience)
+      const [creator] = await db
+        .select({ name: users.name })
+        .from(users)
+        .where(eq(users.id, userId));
+
+      await notificationService.notifyNewTicketToManagers(
+        newTicket.id,
+        newTicket.title,
+        creator?.name || "A tenant",
+        newTicket.priority
+      );
+
       return newTicket;
     });
   },

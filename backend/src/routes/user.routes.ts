@@ -5,7 +5,7 @@ import { roleMiddleware } from "../middlewares/role.middleware";
 
 const router = Router();
 
-// List technicians (managers only)
+// List technicians (managers only - for assignment)
 router.get(
   "/technicians",
   authMiddleware,

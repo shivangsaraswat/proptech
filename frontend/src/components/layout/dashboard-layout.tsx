@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/stores/auth-store';
 import { useAuth } from '@/hooks/use-auth';
 import { useIsMobile } from '@/hooks/use-media-query';
+import { useUnreadNotificationsCount } from '@/hooks/queries/use-notifications';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -16,6 +17,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { user } = useAuthStore();
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const { data: unreadCount } = useUnreadNotificationsCount();
 
   const handleLogout = () => {
     logout();
@@ -85,7 +87,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               onClick={() => isMobile && setSidebarOpen(false)}
             >
               <span className="text-xl">{item.icon}</span>
-              <span className="font-medium">{item.name}</span>
+              <span className="font-medium flex-1">{item.name}</span>
+              {item.name === 'Notifications' && !!unreadCount && unreadCount > 0 && (
+                <span className="bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
             </Link>
           ))}
         </nav>

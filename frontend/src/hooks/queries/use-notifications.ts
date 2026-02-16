@@ -9,10 +9,10 @@ export function useNotifications(unreadOnly = false) {
     queryKey: queryKeys.notifications.list(unreadOnly),
     queryFn: async () => {
       const params = unreadOnly ? '?unread=true' : '';
-      const { data } = await apiClient.get<ApiResponse<Notification[]>>(
-        `/notifications${params}`
-      );
-      return data.data;
+      const { data } = await apiClient.get<
+        ApiResponse<{ notifications: Notification[]; unreadCount: number }>
+      >(`/notifications${params}`);
+      return data.data?.notifications ?? [];
     },
   });
 }

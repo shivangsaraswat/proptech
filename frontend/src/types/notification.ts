@@ -2,7 +2,7 @@
 export interface Notification {
   id: string;
   userId: string;
-  type: "ticket_assigned" | "ticket_status_changed" | "ticket_comment";
+  type: "ticket_assigned" | "ticket_status_changed" | "ticket_comment" | "ticket_created";
   title: string;
   message: string;
   relatedTicketId?: string;
