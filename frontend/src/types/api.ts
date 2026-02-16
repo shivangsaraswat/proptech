@@ -17,8 +17,8 @@ export interface PaginatedResponse<T> {
 
 export interface DashboardStats {
   total: number;
-  open: number;
-  assigned: number;
+  open?: number;
+  assigned?: number;
   inProgress: number;
   done: number;
   urgent?: number;

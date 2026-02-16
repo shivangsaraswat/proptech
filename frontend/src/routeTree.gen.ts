@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardTicketsRouteImport } from './routes/dashboard.tickets'
 import { Route as DashboardNotificationsRouteImport } from './routes/dashboard.notifications'
+import { Route as DashboardTicketsIndexRouteImport } from './routes/dashboard.tickets.index'
 import { Route as DashboardTicketsTicketIdRouteImport } from './routes/dashboard.tickets.$ticketId'
 
 const RegisterRoute = RegisterRouteImport.update({
@@ -53,6 +54,11 @@ const DashboardNotificationsRoute = DashboardNotificationsRouteImport.update({
   path: '/notifications',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardTicketsIndexRoute = DashboardTicketsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardTicketsRoute,
+} as any)
 const DashboardTicketsTicketIdRoute =
   DashboardTicketsTicketIdRouteImport.update({
     id: '/$ticketId',
@@ -69,15 +75,16 @@ export interface FileRoutesByFullPath {
   '/dashboard/tickets': typeof DashboardTicketsRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/tickets/$ticketId': typeof DashboardTicketsTicketIdRoute
+  '/dashboard/tickets/': typeof DashboardTicketsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/dashboard/notifications': typeof DashboardNotificationsRoute
-  '/dashboard/tickets': typeof DashboardTicketsRouteWithChildren
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/tickets/$ticketId': typeof DashboardTicketsTicketIdRoute
+  '/dashboard/tickets': typeof DashboardTicketsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +96,7 @@ export interface FileRoutesById {
   '/dashboard/tickets': typeof DashboardTicketsRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/tickets/$ticketId': typeof DashboardTicketsTicketIdRoute
+  '/dashboard/tickets/': typeof DashboardTicketsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,15 +109,16 @@ export interface FileRouteTypes {
     | '/dashboard/tickets'
     | '/dashboard/'
     | '/dashboard/tickets/$ticketId'
+    | '/dashboard/tickets/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/register'
     | '/dashboard/notifications'
-    | '/dashboard/tickets'
     | '/dashboard'
     | '/dashboard/tickets/$ticketId'
+    | '/dashboard/tickets'
   id:
     | '__root__'
     | '/'
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/dashboard/tickets'
     | '/dashboard/'
     | '/dashboard/tickets/$ticketId'
+    | '/dashboard/tickets/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -180,6 +190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardNotificationsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/tickets/': {
+      id: '/dashboard/tickets/'
+      path: '/'
+      fullPath: '/dashboard/tickets/'
+      preLoaderRoute: typeof DashboardTicketsIndexRouteImport
+      parentRoute: typeof DashboardTicketsRoute
+    }
     '/dashboard/tickets/$ticketId': {
       id: '/dashboard/tickets/$ticketId'
       path: '/$ticketId'
@@ -192,10 +209,12 @@ declare module '@tanstack/react-router' {
 
 interface DashboardTicketsRouteChildren {
   DashboardTicketsTicketIdRoute: typeof DashboardTicketsTicketIdRoute
+  DashboardTicketsIndexRoute: typeof DashboardTicketsIndexRoute
 }
 
 const DashboardTicketsRouteChildren: DashboardTicketsRouteChildren = {
   DashboardTicketsTicketIdRoute: DashboardTicketsTicketIdRoute,
+  DashboardTicketsIndexRoute: DashboardTicketsIndexRoute,
 }
 
 const DashboardTicketsRouteWithChildren =

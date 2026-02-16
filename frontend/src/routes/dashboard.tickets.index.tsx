@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, useMatchRoute, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useTickets } from '@/hooks/queries/use-tickets';
 import { Button } from '@/components/ui/button';
 import { CreateTicketDialog } from '@/components/tickets/create-ticket-dialog';
@@ -7,22 +7,11 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useState } from 'react';
 import type { Ticket, TicketStatus } from '@/types';
 
-export const Route = createFileRoute('/dashboard/tickets')({
-  component: TicketsLayout,
+export const Route = createFileRoute('/dashboard/tickets/')({
+  component: TicketsIndexPage,
 });
 
-function TicketsLayout() {
-  const matchRoute = useMatchRoute();
-  const isIndex = matchRoute({ to: '/dashboard/tickets' });
-
-  if (!isIndex) {
-    return <Outlet />;
-  }
-
-  return <TicketsListPage />;
-}
-
-function TicketsListPage() {
+function TicketsIndexPage() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const [statusFilter, setStatusFilter] = useState<TicketStatus | ''>('');
@@ -73,14 +62,12 @@ function TicketsListPage() {
         >
           Open
         </Button>
-        {user?.role !== 'tenant' && (
-          <Button
-            variant={statusFilter === 'assigned' ? 'default' : 'outline'}
-            onClick={() => setStatusFilter('assigned')}
-          >
-            Assigned
-          </Button>
-        )}
+        <Button
+          variant={statusFilter === 'assigned' ? 'default' : 'outline'}
+          onClick={() => setStatusFilter('assigned')}
+        >
+          Assigned
+        </Button>
         <Button
           variant={statusFilter === 'in_progress' ? 'default' : 'outline'}
           onClick={() => setStatusFilter('in_progress')}
