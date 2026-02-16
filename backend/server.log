@@ -1,0 +1,133 @@
+[15:49:41 UTC] [32mINFO[39m: [36m🚀 API server started on http://localhost:4000[39m
+    [35menv[39m: "development"
+    [35mport[39m: 4000
+[15:49:41 UTC] [32mINFO[39m: [36m📚 Swagger docs available at http://localhost:4000/api-docs[39m
+    [35menv[39m: "development"
+[15:50:18 UTC] [32mINFO[39m: [36mIncoming request[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "660f8018-e2de-47d5-85f9-686195e868dd"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/"
+    [35mtype[39m: "http"
+    [35mip[39m: "::1"
+    [35muserAgent[39m: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+[15:50:18 UTC] [33mWARN[39m: [36mRequest completed with client error[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "660f8018-e2de-47d5-85f9-686195e868dd"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/"
+    [35mtype[39m: "http"
+    [35mstatusCode[39m: 404
+    [35mduration[39m: "3ms"
+[15:51:27 UTC] [32mINFO[39m: [36mIncoming request[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "bb9ab3c8-2508-4a9e-8b05-765f93e99441"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs"
+    [35mtype[39m: "http"
+    [35mip[39m: "::1"
+    [35muserAgent[39m: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+[15:51:27 UTC] [32mINFO[39m: [36mRequest completed[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "bb9ab3c8-2508-4a9e-8b05-765f93e99441"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs"
+    [35mtype[39m: "http"
+    [35mstatusCode[39m: 301
+    [35mduration[39m: "24ms"
+[15:51:27 UTC] [32mINFO[39m: [36mIncoming request[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "b8ce1ffe-9c39-4299-88bf-54f0da6d0474"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs/"
+    [35mtype[39m: "http"
+    [35mip[39m: "::1"
+    [35muserAgent[39m: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+[15:51:27 UTC] [32mINFO[39m: [36mRequest completed[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "b8ce1ffe-9c39-4299-88bf-54f0da6d0474"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs/"
+    [35mtype[39m: "http"
+    [35mstatusCode[39m: 200
+    [35mduration[39m: "7ms"
+[15:51:27 UTC] [32mINFO[39m: [36mIncoming request[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "697f1b65-513f-4680-90ab-1b817ceed8df"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs/swagger-ui.css"
+    [35mtype[39m: "http"
+    [35mip[39m: "::1"
+    [35muserAgent[39m: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+[15:51:27 UTC] [32mINFO[39m: [36mIncoming request[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "70af702e-7dcc-48cf-8c6e-df073806442c"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs/swagger-ui-bundle.js"
+    [35mtype[39m: "http"
+    [35mip[39m: "::1"
+    [35muserAgent[39m: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+[15:51:27 UTC] [32mINFO[39m: [36mIncoming request[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "be80da1e-499d-49ee-8db8-d641fe481204"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs/swagger-ui-standalone-preset.js"
+    [35mtype[39m: "http"
+    [35mip[39m: "::1"
+    [35muserAgent[39m: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+[15:51:27 UTC] [32mINFO[39m: [36mIncoming request[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "2fe79e8b-5511-412e-b0a1-e0b5932371f5"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs/swagger-ui-init.js"
+    [35mtype[39m: "http"
+    [35mip[39m: "::1"
+    [35muserAgent[39m: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+[15:51:27 UTC] [32mINFO[39m: [36mRequest completed[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "2fe79e8b-5511-412e-b0a1-e0b5932371f5"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs/swagger-ui-init.js"
+    [35mtype[39m: "http"
+    [35mstatusCode[39m: 200
+    [35mduration[39m: "1ms"
+[15:51:27 UTC] [32mINFO[39m: [36mRequest completed[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "697f1b65-513f-4680-90ab-1b817ceed8df"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs/swagger-ui.css"
+    [35mtype[39m: "http"
+    [35mstatusCode[39m: 200
+    [35mduration[39m: "12ms"
+[15:51:27 UTC] [32mINFO[39m: [36mRequest completed[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "be80da1e-499d-49ee-8db8-d641fe481204"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs/swagger-ui-standalone-preset.js"
+    [35mtype[39m: "http"
+    [35mstatusCode[39m: 200
+    [35mduration[39m: "12ms"
+[15:51:27 UTC] [32mINFO[39m: [36mRequest completed[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "70af702e-7dcc-48cf-8c6e-df073806442c"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs/swagger-ui-bundle.js"
+    [35mtype[39m: "http"
+    [35mstatusCode[39m: 200
+    [35mduration[39m: "17ms"
+[15:51:28 UTC] [32mINFO[39m: [36mIncoming request[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "37c12e75-6850-45ff-ac02-8ef88895c0c9"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs/favicon-32x32.png"
+    [35mtype[39m: "http"
+    [35mip[39m: "::1"
+    [35muserAgent[39m: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+[15:51:28 UTC] [32mINFO[39m: [36mRequest completed[39m
+    [35menv[39m: "development"
+    [35mrequestId[39m: "37c12e75-6850-45ff-ac02-8ef88895c0c9"
+    [35mmethod[39m: "GET"
+    [35murl[39m: "/api-docs/favicon-32x32.png"
+    [35mtype[39m: "http"
+    [35mstatusCode[39m: 200
+    [35mduration[39m: "3ms"

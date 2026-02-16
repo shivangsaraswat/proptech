@@ -1,0 +1,8 @@
+$ vite dev --port 3000
+
+  VITE v7.3.1  ready in 1099 ms
+
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+error: script "dev" was terminated by signal SIGHUP (Terminal hung up)
