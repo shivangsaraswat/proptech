@@ -99,7 +99,8 @@ export const errorMiddleware = (
     );
   }
 
-  const message = err instanceof Error ? err.message : "Internal server error";
+  const isDev = process.env.NODE_ENV === "development";
+  const message = isDev && err instanceof Error ? err.message : "Internal server error";
   res.status(500).json({
     success: false,
     message,

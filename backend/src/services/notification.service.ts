@@ -1,6 +1,6 @@
 import { db } from "../config/database";
 import { notifications, users } from "../models/schema";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, sql } from "drizzle-orm";
 import { withTransaction, DbContext } from "../utils/transaction";
 
 export const notificationService = {
@@ -46,8 +46,8 @@ export const notificationService = {
   },
 
   async getUnreadCount(userId: string): Promise<number> {
-    const result = await db
-      .select()
+    const [result] = await db
+      .select({ count: sql<number>`count(*)` })
       .from(notifications)
       .where(
         and(
@@ -56,7 +56,7 @@ export const notificationService = {
         )
       );
 
-    return result.length;
+    return Number(result?.count ?? 0);
   },
 
   async markAsRead(notificationId: string, userId: string): Promise<void> {

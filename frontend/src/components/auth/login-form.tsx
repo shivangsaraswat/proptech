@@ -29,7 +29,7 @@ export function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-      const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     try {
       setError(null);
       await loginUser(data);
@@ -134,15 +134,15 @@ export function LoginForm() {
         <div className="mt-3 p-3 bg-gray-50 rounded space-y-2">
           <div>
             <p className="font-medium text-gray-900">Tenant:</p>
-            <p className="text-gray-600">tenant@example.com / password</p>
+            <p className="text-gray-600">tenant@demo.com / password123</p>
           </div>
           <div>
             <p className="font-medium text-gray-900">Manager:</p>
-            <p className="text-gray-600">manager@example.com / password</p>
+            <p className="text-gray-600">manager@demo.com / password123</p>
           </div>
           <div>
             <p className="font-medium text-gray-900">Technician:</p>
-            <p className="text-gray-600">tech@example.com / password</p>
+            <p className="text-gray-600">technician@demo.com / password123</p>
           </div>
         </div>
       </details>

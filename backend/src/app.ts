@@ -1,4 +1,5 @@
 import cors from "cors";
+import { env } from "./config/env";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger";
@@ -8,7 +9,19 @@ import { requestLogger } from "./middlewares/request-logger.middleware";
 
 export const app = express();
 
-app.use(cors());
+// CORS Configuration
+const corsOrigins = env.CORS_ORIGINS
+    ? env.CORS_ORIGINS.split(",").map((origin) => origin.trim())
+    : [];
+
+app.use(
+    cors({
+        origin: corsOrigins.length > 0 ? corsOrigins : true,
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    })
+);
 app.use(express.json());
 
 // Request logging middleware (should be before routes)

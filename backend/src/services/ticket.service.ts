@@ -59,7 +59,8 @@ export const ticketService = {
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    // Get tickets with creator and assignee info
+    // Get tickets with creator and assignee info in a single query
+    const creatorAlias = users;
     const ticketList = await db
       .select({
         id: tickets.id,
@@ -71,50 +72,63 @@ export const ticketService = {
         building: tickets.building,
         createdAt: tickets.createdAt,
         updatedAt: tickets.updatedAt,
-        creator: {
-          id: users.id,
-          name: users.name,
-          email: users.email,
-          avatarUrl: users.avatarUrl,
-        },
+        createdBy: tickets.createdBy,
+        assignedTo: tickets.assignedTo,
+        creatorId: creatorAlias.id,
+        creatorName: creatorAlias.name,
+        creatorEmail: creatorAlias.email,
+        creatorAvatar: creatorAlias.avatarUrl,
       })
       .from(tickets)
-      .leftJoin(users, eq(tickets.createdBy, users.id))
+      .leftJoin(creatorAlias, eq(tickets.createdBy, creatorAlias.id))
       .where(whereClause)
       .orderBy(desc(tickets.createdAt))
       .limit(limit)
       .offset(offset);
 
-    // Get assignee separately for each ticket
-    const ticketsWithAssignee = await Promise.all(
-      ticketList.map(async (ticket) => {
-        const [ticketData] = await db
-          .select({
-            assignedTo: tickets.assignedTo,
-          })
-          .from(tickets)
-          .where(eq(tickets.id, ticket.id));
+    // Build assignee lookup in single batch query instead of N+1
+    const assignedToIds = ticketList
+      .map((t) => t.assignedTo)
+      .filter((id): id is string => id !== null);
 
-        let assignee = null;
-        if (ticketData?.assignedTo) {
-          const [assigneeData] = await db
-            .select({
-              id: users.id,
-              name: users.name,
-              email: users.email,
-              avatarUrl: users.avatarUrl,
-            })
-            .from(users)
-            .where(eq(users.id, ticketData.assignedTo));
-          assignee = assigneeData || null;
-        }
+    let assigneeMap = new Map<string, { id: string; name: string; email: string; avatarUrl: string | null }>();
+    if (assignedToIds.length > 0) {
+      const uniqueIds = [...new Set(assignedToIds)];
+      const assignees = await db
+        .select({
+          id: users.id,
+          name: users.name,
+          email: users.email,
+          avatarUrl: users.avatarUrl,
+        })
+        .from(users)
+        .where(
+          or(...uniqueIds.map((uid) => eq(users.id, uid)))!
+        );
 
-        return {
-          ...ticket,
-          assignee,
-        };
-      })
-    );
+      for (const a of assignees) {
+        assigneeMap.set(a.id, a);
+      }
+    }
+
+    const ticketsWithAssignee = ticketList.map((ticket) => ({
+      id: ticket.id,
+      title: ticket.title,
+      description: ticket.description,
+      status: ticket.status,
+      priority: ticket.priority,
+      unitNumber: ticket.unitNumber,
+      building: ticket.building,
+      createdAt: ticket.createdAt,
+      updatedAt: ticket.updatedAt,
+      creator: {
+        id: ticket.creatorId,
+        name: ticket.creatorName,
+        email: ticket.creatorEmail,
+        avatarUrl: ticket.creatorAvatar,
+      },
+      assignee: ticket.assignedTo ? assigneeMap.get(ticket.assignedTo) ?? null : null,
+    }));
 
     // Get total count
     const [{ count }] = await db

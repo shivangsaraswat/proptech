@@ -29,14 +29,15 @@ export const authService = {
       // Hash password
       const passwordHash = await hashPassword(input.password);
 
-      // Create user
+      // Create user - force role to 'tenant' for public registration
+      // Manager and technician roles should only be created by admins
       const [newUser] = await tx
         .insert(users)
         .values({
           name: input.name,
           email: input.email,
           passwordHash,
-          role: input.role || "tenant",
+          role: "tenant",
           phone: input.phone,
         })
         .returning({
