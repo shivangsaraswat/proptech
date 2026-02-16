@@ -92,7 +92,7 @@ export function RegisterForm() {
       {/* Role Selection Cards */}
       <div>
         <Label className="text-sm font-medium text-gray-700 mb-3 block">I am a...</Label>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
           {roles.map((role) => {
             const isSelected = selectedRole === role.value;
             return (
@@ -101,26 +101,26 @@ export function RegisterForm() {
                 type="button"
                 onClick={() => setValue('role', role.value)}
                 disabled={isPending}
-                className={`relative flex flex-col items-center gap-2.5 rounded-xl border-2 p-5 text-center transition-all cursor-pointer ${
+                className={`relative flex flex-col items-center gap-2 sm:gap-2.5 rounded-xl border-2 p-3 sm:p-5 text-center transition-all cursor-pointer ${
                   isSelected
                     ? `${role.color} ring-2 shadow-md`
                     : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
                 } disabled:opacity-50 disabled:cursor-not-allowed`}
               >
-                <div className={`flex items-center justify-center w-12 h-12 rounded-full transition-colors ${isSelected ? role.iconBg : 'bg-gray-100'}`}>
-                  <span className="text-2xl">{role.icon}</span>
+                <div className={`flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-colors ${isSelected ? role.iconBg : 'bg-gray-100'}`}>
+                  <span className="text-xl sm:text-2xl">{role.icon}</span>
                 </div>
-                <div className="space-y-1">
-                  <span className={`text-sm font-semibold block ${isSelected ? 'text-gray-900' : 'text-gray-700'}`}>
+                <div className="space-y-0.5 sm:space-y-1">
+                  <span className={`text-xs sm:text-sm font-semibold block ${isSelected ? 'text-gray-900' : 'text-gray-700'}`}>
                     {role.label}
                   </span>
-                  <span className="text-xs leading-tight text-gray-600 block">
+                  <span className="text-[10px] sm:text-xs leading-tight text-gray-600 block">
                     {role.description}
                   </span>
                 </div>
                 {isSelected && (
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center shadow-sm">
-                    <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute -top-1.5 sm:-top-2 -right-1.5 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 bg-indigo-600 rounded-full flex items-center justify-center shadow-sm">
+                    <svg className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
