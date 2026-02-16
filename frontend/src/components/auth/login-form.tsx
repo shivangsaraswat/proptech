@@ -43,11 +43,11 @@ export function LoginForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-gray-900">Welcome back</h2>
-        <p className="text-gray-600 mt-1">Sign in to your account</p>
+        <p className="text-gray-600 mt-2">Sign in to your account</p>
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
           {error}
         </div>
       )}
@@ -55,12 +55,14 @@ export function LoginForm() {
       <div className="space-y-4">
         {/* Email */}
         <div>
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email" className="text-sm font-medium text-gray-700 mb-1.5 block">
+            Email
+          </Label>
           <Input
             id="email"
             type="email"
             placeholder="you@example.com"
-            className="h-12"
+            className="h-11 text-gray-900 placeholder:text-gray-500 bg-white border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
             {...register('email')}
             disabled={isPending}
           />
@@ -71,13 +73,15 @@ export function LoginForm() {
 
         {/* Password */}
         <div>
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password" className="text-sm font-medium text-gray-700 mb-1.5 block">
+            Password
+          </Label>
           <div className="relative">
             <Input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              placeholder="••••••••"
-              className="h-12 pr-10"
+              placeholder="Enter your password"
+              className="h-11 pr-10 text-gray-900 placeholder:text-gray-500 bg-white border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
               {...register('password')}
               disabled={isPending}
             />
@@ -108,10 +112,20 @@ export function LoginForm() {
       {/* Submit Button */}
       <Button
         type="submit"
-        className="w-full h-12 text-base font-semibold"
+        className="w-full h-12 text-base font-semibold bg-indigo-600 hover:bg-indigo-700 text-white"
         disabled={isPending}
       >
-        {isPending ? 'Signing in...' : 'Sign In'}
+        {isPending ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            </svg>
+            Signing in...
+          </span>
+        ) : (
+          'Sign In'
+        )}
       </Button>
 
       {/* Register Link */}
