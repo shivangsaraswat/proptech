@@ -1,5 +1,5 @@
 // Ticket types
-export type TicketStatus = "open" | "assigned" | "in_progress" | "done" | "cancelled";
+export type TicketStatus = "open" | "assigned" | "in_progress" | "done";
 export type TicketPriority = "low" | "medium" | "high" | "urgent";
 
 export interface Ticket {

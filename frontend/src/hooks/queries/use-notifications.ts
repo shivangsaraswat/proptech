@@ -1,17 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { ApiResponse, Notification, PaginatedResponse } from '@/types';
+import type { ApiResponse, Notification } from '@/types';
 import { apiClient } from '@/lib/api';
 import { queryKeys } from '@/lib/query-client';
 
 // List notifications
-export function useNotifications(page = 1, limit = 20) {
+export function useNotifications(unreadOnly = false) {
   return useQuery({
-    queryKey: queryKeys.notifications.list({ page, limit }),
+    queryKey: queryKeys.notifications.list(unreadOnly),
     queryFn: async () => {
-      const { data } = await apiClient.get<PaginatedResponse<Notification>>(
-        `/notifications?page=${page}&limit=${limit}`
+      const params = unreadOnly ? '?unread=true' : '';
+      const { data } = await apiClient.get<ApiResponse<Notification[]>>(
+        `/notifications${params}`
       );
-      return data;
+      return data.data;
     },
   });
 }
@@ -24,7 +25,7 @@ export function useUnreadNotificationsCount() {
       const { data } = await apiClient.get<ApiResponse<{ count: number }>>(
         '/notifications/unread/count'
       );
-      return data.data.count;
+      return data.data?.count ?? 0;
     },
     refetchInterval: 30000, // Poll every 30 seconds
   });
@@ -40,10 +41,7 @@ export function useMarkNotificationAsRead() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.notifications.lists(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.notifications.unreadCount,
+        queryKey: queryKeys.notifications.all,
       });
     },
   });
@@ -59,10 +57,7 @@ export function useMarkAllNotificationsAsRead() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.notifications.lists(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.notifications.unreadCount,
+        queryKey: queryKeys.notifications.all,
       });
     },
   });

@@ -10,10 +10,14 @@ router.use(authMiddleware);
 // List notifications
 router.get("/", notificationController.list);
 
+// Get unread count
+router.get("/unread/count", notificationController.getUnreadCount);
+
 // Mark notification as read
 router.patch("/:id/read", notificationController.markAsRead);
 
-// Mark all notifications as read
+// Mark all notifications as read (support both PATCH and POST for frontend compatibility)
 router.patch("/read-all", notificationController.markAllAsRead);
+router.post("/mark-all-read", notificationController.markAllAsRead);
 
 export default router;

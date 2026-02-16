@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
   ApiResponse,
   CreateTicketInput,
-  PaginatedResponse,
   Ticket,
   TicketPriority,
   TicketStatus,
@@ -22,7 +21,7 @@ export function useTickets(filters?: {
   limit?: number;
 }) {
   return useQuery({
-    queryKey: queryKeys.tickets.list(filters),
+    queryKey: queryKeys.tickets.list(filters ?? {}),
     queryFn: async () => {
       const params = new URLSearchParams();
       if (filters?.status) params.append('status', filters.status);
@@ -33,10 +32,13 @@ export function useTickets(filters?: {
       if (filters?.page) params.append('page', filters.page.toString());
       if (filters?.limit) params.append('limit', filters.limit.toString());
 
-      const { data } = await apiClient.get<PaginatedResponse<Ticket>>(
+      const { data } = await apiClient.get<ApiResponse<{
+        tickets: Ticket[];
+        pagination: { page: number; limit: number; total: number; totalPages: number };
+      }>>(
         `/tickets?${params.toString()}`
       );
-      return data;
+      return data.data;
     },
   });
 }
@@ -68,8 +70,7 @@ export function useCreateTicket() {
       return data.data;
     },
     onSuccess: () => {
-      // Invalidate all ticket lists
-      queryClient.invalidateQueries({ queryKey: queryKeys.tickets.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.tickets.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.stats });
     },
   });
@@ -88,13 +89,11 @@ export function useUpdateTicket(ticketId: string) {
       return data.data;
     },
     onSuccess: (updatedTicket) => {
-      // Update ticket detail cache
       queryClient.setQueryData(
         queryKeys.tickets.detail(ticketId),
         updatedTicket
       );
-      // Invalidate ticket lists
-      queryClient.invalidateQueries({ queryKey: queryKeys.tickets.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.tickets.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.stats });
     },
   });
@@ -117,7 +116,7 @@ export function useAssignTicket(ticketId: string) {
         queryKeys.tickets.detail(ticketId),
         updatedTicket
       );
-      queryClient.invalidateQueries({ queryKey: queryKeys.tickets.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.tickets.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.stats });
     },
   });
@@ -140,7 +139,7 @@ export function useUpdateTicketStatus(ticketId: string) {
         queryKeys.tickets.detail(ticketId),
         updatedTicket
       );
-      queryClient.invalidateQueries({ queryKey: queryKeys.tickets.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.tickets.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.stats });
     },
   });
@@ -158,11 +157,10 @@ export function useAddComment(ticketId: string) {
       );
       return data.data;
     },
-    onSuccess: (updatedTicket) => {
-      queryClient.setQueryData(
-        queryKeys.tickets.detail(ticketId),
-        updatedTicket
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.tickets.detail(ticketId),
+      });
     },
   });
 }
@@ -176,7 +174,7 @@ export function useDeleteTicket() {
       await apiClient.delete(`/tickets/${ticketId}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.tickets.lists() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.tickets.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.stats });
     },
   });

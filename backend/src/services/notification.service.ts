@@ -1,6 +1,6 @@
 import { db } from "../config/database";
 import { notifications, users } from "../models/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { withTransaction, DbContext } from "../utils/transaction";
 
 export const notificationService = {
@@ -24,8 +24,8 @@ export const notificationService = {
   },
 
   async list(userId: string, unreadOnly: boolean = false) {
-    const conditions = unreadOnly
-      ? eq(notifications.userId, userId) && eq(notifications.isRead, false)
+    const whereClause = unreadOnly
+      ? and(eq(notifications.userId, userId), eq(notifications.isRead, false))
       : eq(notifications.userId, userId);
 
     const result = await db
@@ -39,8 +39,8 @@ export const notificationService = {
         createdAt: notifications.createdAt,
       })
       .from(notifications)
-      .where(eq(notifications.userId, userId))
-      .orderBy(notifications.createdAt);
+      .where(whereClause)
+      .orderBy(desc(notifications.createdAt));
 
     return result;
   },

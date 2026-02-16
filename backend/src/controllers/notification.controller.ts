@@ -58,4 +58,21 @@ export const notificationController = {
       next(error);
     }
   },
+
+  async getUnreadCount(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: "Unauthorized" });
+      }
+
+      const count = await notificationService.getUnreadCount(req.user.userId);
+
+      res.status(200).json({
+        success: true,
+        data: { count },
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

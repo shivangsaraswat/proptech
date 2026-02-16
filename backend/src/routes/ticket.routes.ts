@@ -28,4 +28,25 @@ router.post("/:id/comments", ticketController.addComment);
 // Add images (all authenticated users)
 router.post("/:id/images", ticketController.addImages);
 
+// Assign ticket (managers only)
+router.post(
+  "/:id/assign",
+  roleMiddleware("manager"),
+  ticketController.assignTicket
+);
+
+// Update ticket status (managers and technicians only)
+router.patch(
+  "/:id/status",
+  roleMiddleware("manager", "technician"),
+  ticketController.updateStatus
+);
+
+// Delete ticket (managers only)
+router.delete(
+  "/:id",
+  roleMiddleware("manager"),
+  ticketController.deleteTicket
+);
+
 export default router;

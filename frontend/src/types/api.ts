@@ -20,7 +20,6 @@ export interface DashboardStats {
   open: number;
   assigned: number;
   inProgress: number;
-  resolved: number;
-  closed: number;
-  urgent: number;
+  done: number;
+  urgent?: number;
 }

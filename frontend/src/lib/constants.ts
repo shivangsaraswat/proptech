@@ -43,11 +43,6 @@ export const TICKET_STATUS_CONFIG: Record<
     color: "text-green-700",
     bgColor: "bg-green-100",
   },
-  cancelled: {
-    label: "Cancelled",
-    color: "text-gray-700",
-    bgColor: "bg-gray-100",
-  },
 };
 
 // Ticket Priority Configuration

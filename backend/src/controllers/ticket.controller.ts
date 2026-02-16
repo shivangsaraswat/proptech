@@ -132,4 +132,87 @@ export const ticketController = {
       next(error);
     }
   },
+
+  async assignTicket(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: "Unauthorized" });
+      }
+
+      const { id } = req.params;
+      const { technicianId } = req.body;
+
+      if (!technicianId) {
+        return res.status(400).json({ success: false, message: "technicianId is required" });
+      }
+
+      const result = await ticketService.assignTicket(
+        id,
+        technicianId,
+        req.user.userId,
+        req.user.role
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Ticket assigned successfully",
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async updateStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: "Unauthorized" });
+      }
+
+      const { id } = req.params;
+      const { status } = req.body;
+
+      if (!status) {
+        return res.status(400).json({ success: false, message: "status is required" });
+      }
+
+      const validStatuses = ["open", "assigned", "in_progress", "done"];
+      if (!validStatuses.includes(status)) {
+        return res.status(400).json({ success: false, message: `Invalid status. Must be one of: ${validStatuses.join(", ")}` });
+      }
+
+      const result = await ticketService.updateTicketStatus(
+        id,
+        status,
+        req.user.userId,
+        req.user.role
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Ticket status updated successfully",
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async deleteTicket(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: "Unauthorized" });
+      }
+
+      const { id } = req.params;
+      await ticketService.deleteTicket(id, req.user.userId, req.user.role);
+
+      res.status(200).json({
+        success: true,
+        message: "Ticket deleted successfully",
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

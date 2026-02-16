@@ -5,6 +5,7 @@ import {
   ticketComments,
   ticketActivityLog,
   users,
+  notifications,
 } from "../models/schema";
 import { eq, and, or, ilike, desc, sql } from "drizzle-orm";
 import { ApiError } from "../utils/api-error";
@@ -331,7 +332,7 @@ export const ticketService = {
       const changes: string[] = [];
       if (input.status && input.status !== currentTicket.status) {
         changes.push(`Status changed from ${currentTicket.status} to ${input.status}`);
-        
+
         // Notify ticket creator of status change
         await notificationService.notifyTicketStatusChange(
           currentTicket.createdBy,
@@ -352,7 +353,7 @@ export const ticketService = {
             .from(users)
             .where(eq(users.id, input.assignedTo));
           changes.push(`Assigned to ${assignee?.name || "technician"}`);
-          
+
           // Notify assignee
           await notificationService.notifyTicketAssignment(
             input.assignedTo,
@@ -414,7 +415,7 @@ export const ticketService = {
       // Notify relevant users (creator and assignee, but not the commenter)
       const notifyUsers = [ticket.createdBy];
       if (ticket.assignedTo) notifyUsers.push(ticket.assignedTo);
-      
+
       for (const notifyUserId of notifyUsers) {
         if (notifyUserId !== userId) {
           await notificationService.notifyNewComment(
@@ -462,6 +463,143 @@ export const ticketService = {
       });
 
       return newImages;
+    });
+  },
+
+  async assignTicket(ticketId: string, technicianId: string, userId: string, userRole: string) {
+    if (userRole !== "manager") {
+      throw ApiError.forbidden("Only managers can assign tickets");
+    }
+
+    return withTransaction(async (tx) => {
+      const [ticket] = await tx
+        .select()
+        .from(tickets)
+        .where(eq(tickets.id, ticketId));
+
+      if (!ticket) {
+        throw ApiError.notFound("Ticket not found");
+      }
+
+      // Verify the technician exists and is active
+      const [technician] = await tx
+        .select({ id: users.id, name: users.name })
+        .from(users)
+        .where(and(eq(users.id, technicianId), eq(users.role, "technician"), eq(users.isActive, true)));
+
+      if (!technician) {
+        throw ApiError.notFound("Technician not found or is not active");
+      }
+
+      // Update the ticket
+      const [updatedTicket] = await tx
+        .update(tickets)
+        .set({
+          assignedTo: technicianId,
+          status: ticket.status === "open" ? "assigned" : ticket.status,
+          updatedAt: new Date(),
+        })
+        .where(eq(tickets.id, ticketId))
+        .returning();
+
+      // Log activity
+      await tx.insert(ticketActivityLog).values({
+        ticketId,
+        userId,
+        action: "updated",
+        details: `Assigned to ${technician.name}`,
+      });
+
+      // Notify the technician
+      await notificationService.notifyTicketAssignment(
+        technicianId,
+        ticketId,
+        ticket.title
+      );
+
+      return updatedTicket;
+    });
+  },
+
+  async updateTicketStatus(
+    ticketId: string,
+    newStatus: string,
+    userId: string,
+    userRole: string
+  ) {
+    if (userRole === "tenant") {
+      throw ApiError.forbidden("Tenants cannot change ticket status");
+    }
+
+    return withTransaction(async (tx) => {
+      const [ticket] = await tx
+        .select()
+        .from(tickets)
+        .where(eq(tickets.id, ticketId));
+
+      if (!ticket) {
+        throw ApiError.notFound("Ticket not found");
+      }
+
+      // Technicians can only update tickets assigned to them
+      if (userRole === "technician" && ticket.assignedTo !== userId) {
+        throw ApiError.forbidden("You can only update tickets assigned to you");
+      }
+
+      const [updatedTicket] = await tx
+        .update(tickets)
+        .set({
+          status: newStatus,
+          updatedAt: new Date(),
+        })
+        .where(eq(tickets.id, ticketId))
+        .returning();
+
+      // Log activity
+      await tx.insert(ticketActivityLog).values({
+        ticketId,
+        userId,
+        action: "updated",
+        details: `Status changed from ${ticket.status} to ${newStatus}`,
+      });
+
+      // Notify the ticket creator
+      if (ticket.createdBy !== userId) {
+        await notificationService.notifyTicketStatusChange(
+          ticket.createdBy,
+          ticketId,
+          ticket.title,
+          newStatus
+        );
+      }
+
+      return updatedTicket;
+    });
+  },
+
+  async deleteTicket(ticketId: string, userId: string, userRole: string) {
+    if (userRole !== "manager") {
+      throw ApiError.forbidden("Only managers can delete tickets");
+    }
+
+    return withTransaction(async (tx) => {
+      const [ticket] = await tx
+        .select()
+        .from(tickets)
+        .where(eq(tickets.id, ticketId));
+
+      if (!ticket) {
+        throw ApiError.notFound("Ticket not found");
+      }
+
+      // Delete in dependency order
+      await tx.delete(notifications).where(eq(notifications.relatedTicketId, ticketId));
+      await tx.delete(ticketActivityLog).where(eq(ticketActivityLog.ticketId, ticketId));
+      await tx.delete(ticketComments).where(eq(ticketComments.ticketId, ticketId));
+      await tx.delete(ticketImages).where(eq(ticketImages.ticketId, ticketId));
+      await tx.delete(tickets).where(eq(tickets.id, ticketId));
+
+      return { deleted: true };
     });
   },
 };
