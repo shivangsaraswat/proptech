@@ -15,7 +15,7 @@ function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 p-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-2xl">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-full mb-4">
             <svg
@@ -35,7 +35,7 @@ function RegisterPage() {
           <h1 className="text-3xl font-bold text-gray-900">PropTech</h1>
           <p className="text-gray-600 mt-2">Property Maintenance System</p>
         </div>
-        <div className="bg-white rounded-lg shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-xl p-8">
           <RegisterForm />
         </div>
       </div>
