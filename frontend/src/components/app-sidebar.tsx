@@ -4,9 +4,12 @@ import * as React from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
     ArrowUp01Icon,
+    ComputerIcon,
     Home01Icon,
     Logout01Icon,
+    Moon02Icon,
     Notification01Icon,
+    Sun03Icon,
     Ticket01Icon,
 } from "@hugeicons/core-free-icons"
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router"
@@ -26,6 +29,7 @@ import {
 import { useAuthStore } from "@/stores/auth-store"
 import { useAuth } from "@/hooks/use-auth"
 import { useUnreadNotificationsCount } from "@/hooks/queries/use-notifications"
+import { useTheme } from "@/components/theme-provider"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -38,6 +42,7 @@ import {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { user } = useAuthStore()
     const { logout } = useAuth()
+    const { setTheme } = useTheme()
     const navigate = useNavigate()
     const routerState = useRouterState()
     const { data: unreadCount } = useUnreadNotificationsCount()
@@ -138,6 +143,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                         </div>
                                     </div>
                                 </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuLabel>Theme</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => setTheme("light")}>
+                                    <HugeiconsIcon icon={Sun03Icon} />
+                                    Light
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                                    <HugeiconsIcon icon={Moon02Icon} />
+                                    Dark
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTheme("system")}>
+                                    <HugeiconsIcon icon={ComputerIcon} />
+                                    System
+                                </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={handleLogout}>
                                     <HugeiconsIcon icon={Logout01Icon} />

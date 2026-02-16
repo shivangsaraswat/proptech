@@ -11,6 +11,7 @@ import { Toaster } from 'sonner';
 import appCss from '../styles.css?url';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { queryClient } from '@/lib/query-client';
+import { ThemeProvider } from '@/components/theme-provider';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -40,12 +41,14 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Outlet />
-        <Toaster position="top-right" richColors />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ThemeProvider defaultTheme="system" storageKey="proptech-theme">
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Outlet />
+          <Toaster position="top-right" richColors />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 
