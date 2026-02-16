@@ -249,7 +249,7 @@ function TicketDetailPage() {
                           <span className="text-xs text-muted-foreground">{new Date(comment.createdAt).toLocaleString()}</span>
                         </div>
                         <div className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-md">
-                          {comment.comment}
+                          {comment.content}
                         </div>
                       </div>
                     </div>

@@ -42,7 +42,7 @@ export interface TicketComment {
   id: string;
   ticketId: string;
   userId: string;
-  comment: string;
+  content: string;
   createdAt: string;
   user?: {
     id: string;
